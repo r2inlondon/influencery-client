@@ -17,7 +17,11 @@ const InfluencerCard = ({ influencer }) => {
       <ContentContainer>
         <FieldTitle>Handle</FieldTitle>
         <CardFields>{influencer?.handle}</CardFields>
-        <FieldTitle>Tags</FieldTitle>
+        <FieldTitle>Primary Tag</FieldTitle>
+        <TagContainer>
+          <Tag>{influencer?.primary_tag.name}</Tag>
+        </TagContainer>
+        <FieldTitle>Secondary Tags</FieldTitle>
         <TagContainer>
           {influencer?.tags.map((tag) => (
             <Tag key={"inf_tag_key" + influencer.id + tag.id}>{tag.name}</Tag>
@@ -36,7 +40,7 @@ const Card = styled.div`
   width: 200px;
   display: inline-block;
   position: relative;
-  height: 330px;
+  max-height: 450px;
   overflow: hidden;
 `;
 
