@@ -6,10 +6,25 @@ const InfluencerSearch = () => {
   const [influencers, setInfluencers] = useState(null);
   const [searchString, setSearchString] = useState("");
   const [platformString, setPlatformString] = useState("all");
+  const [results, setResults] = useState("");
 
   useEffect(() => {
     getInfluencers();
   }, []);
+
+  // useEffect(() => {
+  //   console.log(platformString);
+
+  //   if (platformString === "all") {
+  //     setResults(influencers);
+  //   }
+  //   const filtered = influencers?.filter((inf) => {
+  //     if (platformString === inf.platform.name) {
+  //       return inf;
+  //     }
+  //   });
+  //   setResults(filtered);
+  // }, [platformString]);
 
   const getInfluencers = () =>
     fetch("http://localhost:3000/api/v1/influencers", {
@@ -49,7 +64,14 @@ const InfluencerSearch = () => {
         <div>
           {influencers
             ?.filter((inf) => {
-              if (searchString === "") {
+              if (platformString === "all") {
+                return inf;
+              } else if (platformString === inf.platform.name) {
+                return inf;
+              }
+            })
+            .filter((inf) => {
+              if (inf.handle === "") {
                 return inf;
               } else if (
                 inf.handle.toLowerCase().includes(searchString.toLowerCase())
