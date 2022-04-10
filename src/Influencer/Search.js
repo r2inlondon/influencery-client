@@ -6,25 +6,13 @@ const InfluencerSearch = () => {
   const [influencers, setInfluencers] = useState(null);
   const [searchString, setSearchString] = useState("");
   const [platformString, setPlatformString] = useState("all");
-  const [results, setResults] = useState("");
 
   useEffect(() => {
     getInfluencers();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(platformString);
-
-  //   if (platformString === "all") {
-  //     setResults(influencers);
-  //   }
-  //   const filtered = influencers?.filter((inf) => {
-  //     if (platformString === inf.platform.name) {
-  //       return inf;
-  //     }
-  //   });
-  //   setResults(filtered);
-  // }, [platformString]);
+  const checkTags = (tag) =>
+    tag.name.toLowerCase().includes(searchString.toLowerCase());
 
   const getInfluencers = () =>
     fetch("http://localhost:3000/api/v1/influencers", {
@@ -64,20 +52,22 @@ const InfluencerSearch = () => {
         <div>
           {influencers
             ?.filter((inf) => {
-              if (platformString === "all") {
-                return inf;
-              } else if (platformString === inf.platform.name) {
-                return inf;
-              }
+              return (
+                platformString === "all" || platformString === inf.platform.name
+              );
             })
             .filter((inf) => {
-              if (inf.handle === "") {
-                return inf;
-              } else if (
-                inf.handle.toLowerCase().includes(searchString.toLowerCase())
-              ) {
-                return inf;
-              }
+              const hasTags = [...inf.tags, inf.primary_tag].some(checkTags);
+
+              const hasHandle = inf.handle
+                .toLowerCase()
+                .includes(searchString.toLowerCase());
+
+              const hasPlatform = inf.platform.name
+                .toLowerCase()
+                .includes(searchString.toLowerCase());
+
+              return hasHandle || hasPlatform || hasTags;
             })
             .map((inf, i) => (
               <InfluencerCard influencer={inf} key={"inf_card_" + i} />
