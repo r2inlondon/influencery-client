@@ -11,11 +11,11 @@ const InfluencerSearch = () => {
     getInfluencers();
   }, []);
 
-  const checkTags = (tag) =>
-    tag.name.toLowerCase().includes(searchString.toLowerCase());
-
   const showResults = (influencers) => {
     let results;
+
+    const checkTags = (tag) =>
+      tag.name.toLowerCase().includes(searchString.toLowerCase());
 
     const anyDropbox = influencers?.filter((inf) => {
       return platformString === "all" || platformString === inf.platform.name;
