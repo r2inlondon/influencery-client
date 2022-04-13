@@ -14,6 +14,38 @@ const InfluencerSearch = () => {
   const checkTags = (tag) =>
     tag.name.toLowerCase().includes(searchString.toLowerCase());
 
+  const showResults = (influencers) => {
+    let results;
+
+    const anyDropbox = influencers?.filter((inf) => {
+      return platformString === "all" || platformString === inf.platform.name;
+    });
+
+    const anySearch = anyDropbox.filter((inf) => {
+      const hasTags = [...inf.tags, inf.primary_tag].some(checkTags);
+
+      const hasHandle = inf.handle
+        .toLowerCase()
+        .includes(searchString.toLowerCase());
+
+      const hasPlatform = inf.platform.name
+        .toLowerCase()
+        .includes(searchString.toLowerCase());
+
+      return hasHandle || hasPlatform || hasTags;
+    });
+
+    if (anySearch.length > 0) {
+      results = anySearch.map((inf, i) => {
+        return <InfluencerCard influencer={inf} key={"inf_card_" + i} />;
+      });
+    } else {
+      results = <FieldTitle>Notthing to see here </FieldTitle>;
+    }
+
+    return results;
+  };
+
   const getInfluencers = () =>
     fetch("http://localhost:3000/api/v1/influencers", {
       headers: {
@@ -49,30 +81,7 @@ const InfluencerSearch = () => {
       </SearchInputContainer>
       <SearchContainer>
         {!influencers && <Loader />}
-        <div>
-          {influencers
-            ?.filter((inf) => {
-              return (
-                platformString === "all" || platformString === inf.platform.name
-              );
-            })
-            .filter((inf) => {
-              const hasTags = [...inf.tags, inf.primary_tag].some(checkTags);
-
-              const hasHandle = inf.handle
-                .toLowerCase()
-                .includes(searchString.toLowerCase());
-
-              const hasPlatform = inf.platform.name
-                .toLowerCase()
-                .includes(searchString.toLowerCase());
-
-              return hasHandle || hasPlatform || hasTags;
-            })
-            .map((inf, i) => (
-              <InfluencerCard influencer={inf} key={"inf_card_" + i} />
-            ))}
-        </div>
+        <div>{influencers && showResults(influencers)}</div>
       </SearchContainer>
     </div>
   );
@@ -129,6 +138,11 @@ const SearchInput = styled.input`
     color: grey;
   }
   margin: 10px;
+`;
+
+const FieldTitle = styled.div`
+  font-size: 12px;
+  margin-top: 5px;
 `;
 
 const SearchInputContainer = styled.div`
