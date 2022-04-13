@@ -40,7 +40,7 @@ const InfluencerSearch = () => {
         return <InfluencerCard influencer={inf} key={"inf_card_" + i} />;
       });
     } else {
-      results = <FieldTitle>Notthing to see here </FieldTitle>;
+      results = <FieldTitle>Nothing to see here..</FieldTitle>;
     }
 
     return results;
@@ -141,8 +141,9 @@ const SearchInput = styled.input`
 `;
 
 const FieldTitle = styled.div`
-  font-size: 12px;
-  margin-top: 5px;
+  font-size: 32px;
+  margin-top: 15px;
+  color: grey;
 `;
 
 const SearchInputContainer = styled.div`
