@@ -35,7 +35,7 @@ const InfluencerSearch = () => {
       return hasHandle || hasPlatform || hasTags;
     });
 
-    if (anySearch.length > 0) {
+    if (anySearch) {
       results = anySearch.map((inf, i) => {
         return <InfluencerCard influencer={inf} key={"inf_card_" + i} />;
       });
